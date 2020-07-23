@@ -235,3 +235,7 @@ iwctl
 git init --bare $HOME/.myconf
 alias config='/usr/bin/git --git-dir=$HOME/.myconf/ --work-tree=$HOME'
 config config status.showUntrackedFiles no
+
+# Install texlive-latexextra for latex (this doesn't include a lot of tex features, but 
+# includes most latex features).
+pacman -S texlive-latex-extra
