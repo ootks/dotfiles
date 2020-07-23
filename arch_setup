@@ -1,0 +1,237 @@
+# This is a description of how I set up my computer, so that I don't lose track
+# of packages. This is not really meant to be run, but in principle, it should
+# produce the same set up that I had when setting up arch
+
+
+# Hit <del> repeatedly on boot to get to bios.
+# Followed tutorial at https://itsfoss.com/install-arch/linux
+
+###################
+####X/wm set up ###
+###################
+# Also installed xorg-server and xorg-init with
+pacman -S xorg-server xorg-xinit
+# Tried to run xinit, which is supposed to start up x server. Doesn't seem to work. Missing xterm
+pacman -S xterm
+# Add exec i3 to xinit.rc
+exec i3 >> ~/.xinitrc
+#######################################
+####VOID: Use i3-gaps instead of i3####
+#######################################
+# # Install i3 with
+# pacman -S i3-wm
+# Changed my mind, I want i3-gaps.
+pacman -S i3-gaps
+
+#######################################
+####VOID: Use iwd instead of netctl####
+#######################################
+# # Also installed netctl
+# pacman -S netctl
+# # Turns out that netctl does not install wpa_supplicant, which is needed to connect to wifi. Install that:
+# pacman -S wpa_supplicant
+# # Apparently, you also need need dhcpcd
+# pacman -S dhcpcd
+# #start netctl-auto to autoconnect to wifi
+# systemctl start netctl-auto@wlan0.service && systemctl enable netctl-auto@wlan0.service
+# # Now, create a wifi profile for NETCTL
+
+# At this point, run xstart to start i3.
+# Needed to install some fonts to keep things from looking crazy:
+pacman -S ttf-dejavu
+
+#############################################
+####VOID: Use polybar instead of i3status####
+#############################################
+# # Also need i3status to show status bar
+# pacman -S i3status
+
+# Install firefox
+pacman -S firefox
+
+###################
+####Sudo set up ###
+###################
+# Install sudo 
+pacman -S sudo
+# Add a user to the sudoers group using https://www.ostechnix.com/arch-linux-2016-post-installation/
+useradd -m -g users -G wheel,storage,power -s /bin/bash kshu
+# Create a password for the user using 
+# $ passwd kshu
+# Edit the sudoers file with visudo, uncomment the line " %wheel ALL=(ALL) ALL"
+# to enable sudo for the people in the wheel
+
+####################
+####Audio set up ###
+####################
+# Install nvidia drivers
+# Check with lspci -k that the drivers installed
+# Install alsa (needed for audio)
+pacman -S alsa-utils
+# Install pulseaudio (needed for audio)
+pacman -S pulseaudio
+
+# Copied .vimrc from dropbox
+# Install git
+pacman -S git
+# Install vundle for vim packages
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/vundle
+
+##################################
+####Peripheral programs set up ###
+##################################
+# Install terminaor terminal emulator
+pacman -S terminator
+
+# Install feh for background
+pacman -S feh
+
+######################################
+#####Set up terminal transparency#####
+######################################
+# Install picom to set transparency
+pacman -S picom
+# Add line to i3 config to turn on compositing using picom
+printf "opacity-rule = [\n\"80:class_g = 'Terminator' && !focused\",\n]; " >> .config/picom/picom.conf
+# Add lines to picom config to turn on compositing for terminator windows
+echo "exec --no-startup-id picom" >> .config/i3/config
+
+# Install file manager
+pacman -S thunar
+
+
+#################################
+#####Set up autolock/i3locks#####
+#################################
+# Install dunst as a notification daemon
+# docs here: https://dunst-project.org/documentation/#SYNOPSIS
+pacman -S dunst
+
+# Install xautolock to autolock after specified time
+pacman -S xautolock
+
+# Install xautolock color to show lock screen
+pacman -S i3lock-color
+# Add some things to the i3 config
+# autolock turns the screen off after a minute
+# Sets it to suspend the computer 5 minutes after locking
+# Putting the mouse in the corner turns off this behaviour
+echo "exec_always --no-startup-id xautolock -time 15 -locker i3lock -notify 50 -notifier \"notify-send -u critical -t 10000 -- 'LOCKING screen in 1 minut'\" -killtime 5 -killer \"systemctl suspend\" -corners ---- -secure &" >> .config/i3/config
+
+
+# Need unicode fonts, install gnu free fonts
+pacman -S gnu-free-fonts
+
+# Install base development tools
+pacman -S base-devel --needed
+
+
+#################################
+###########Lean Stuff############
+#################################
+# Install elan for lean development
+# see https://leanprover-community.github.io/install/linux.html
+curl https://raw.githubusercontent.com/Kha/elan/master/elan-init.sh -sSf | sh
+
+# Install pip
+pacman -S python-pip
+
+# Install leanproject
+python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+source ~/.profile
+pipx install mathlibtools
+
+
+# Install vs code from AUR
+mkdir aur_packages
+pushd aur_packages
+git clone https://aur.archlinux.org/packages/visual-studio-code-bin/
+pushd visual-studio-code-bin
+makepkg -si
+popd
+popd
+
+
+# Install aur for polybar
+pushd aur_packages
+git clone https://aur.archlinux.org/packages/polybar/
+pushd polybar
+makepkg -si
+popd
+popd
+
+# Set polybar configuration directory to ~/.config
+echo "export XDG_CONFIG_HOME=$HOME/.config" >> ~/.bash_profile
+
+# Install the siji font, to show polybar icons
+pushd aur_packages
+git clone https://aur.archlinux.org/siji-git.git
+pushd siji-git
+makepkg -si
+popd
+popd
+
+# Add a line to make polybar the relevant bar
+# Need to add a script for launching polybar, ala 
+# https://wiki.archlinux.org/index.php/Polybar
+echo "exec_always --no-startup-id $HOME/.config/polybar/launch.sh" >> .config/i3/config
+# To remove the i3bar from i3, remove the bar section friom i3
+
+# Install spotify from AUR
+# This required trusting another key:
+# gpg --keyserver hkp://keyserver.ubuntu.com:11371 --recv-keys 4773BD5E130D1D45
+
+
+# Install nvidia drivers
+ pacman -S nvidia
+# For some reason, nvidia drivers seem to cause this computer to boot to a black
+# screen. This is annoying. Adding nomodeset to the kernel boot parameters seems
+# to work, but it is unclear wby, as this problem typically happens when you 
+# use Nouveau. Look up how to add kernel parameters
+# https://wiki.archlinux.org/index.php/kernel_parameters
+
+#################################
+###########Install iwd###########
+#################################
+#Installed iwd to replace netctl (because why not?)
+#To do this, install iwd
+pacman -S iwd
+#Then start/enable the iwd service
+systemctl iwd.service && systemctl enable iwd.service
+
+#This tripped me up the first time: in addition to connecting to a wifi endpoint
+#you need to also get an ip through dhcp. To set this up wit iwd, you need to do
+#See https://wiki.archlinux.org/index.php/Iwd#Installation#Enable_built-in_network_configuration
+printf "[General]\nEnableNetworkConfiguration=true" >> /etc/iwd/main.conf
+
+# Create a new wifi profile using iwctl
+iwctl
+
+#####################################################
+#Follw https://news.ycombinator.com/item?id=11070797#
+########To set up version control for configs########
+#####################################################
+#    git init --bare $HOME/.myconf
+#    alias config='/usr/bin/git --git-dir=$HOME/.myconf/ --work-tree=$HOME'
+#    config config status.showUntrackedFiles no
+#
+#where my ~/.myconf directory is a git bare repository. Then any file within the home folder can be versioned with normal commands like:
+#
+#    config status
+#    config add .vimrc
+#    config commit -m "Add vimrc"
+#    config add .config/redshift.conf
+#    config commit -m "Add redshift config"
+#    config push
+#
+#And so one…
+#
+#No extra tooling, no symlinks, files are tracked on a version control system, you can use different branches for different computers, you can replicate you configuration easily on new installation. 
+#To complete the description of the workflow (for others), you can replicate your home directory on a new machine using the following command:
+
+#git clone --separate-git-dir=~/.myconf /path/to/repo ~
+
+git init --bare $HOME/.myconf
+alias config='/usr/bin/git --git-dir=$HOME/.myconf/ --work-tree=$HOME'
+config config status.showUntrackedFiles no
