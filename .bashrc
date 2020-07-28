@@ -18,7 +18,7 @@ export PATH="$HOME/.elan/bin:$PATH"
 
 export CONFIG="$HOME/.config"
 
-alias addset="vim /home/kshu/arch_setup"
+alias addset="vim /home/kshu/arch_setup; config add /home/kshu/arch_setup"
 
 # From https://news.ycombinator.com/item?id=11070797
 alias config='/usr/bin/git --git-dir=$HOME/.myconf/ --work-tree=$HOME'
