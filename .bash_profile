@@ -16,5 +16,3 @@ export PATH="$PATH:/home/kshu/.local/bin"
 export XDG_CONFIG_HOME=$HOME/.config
 
 export PS1='[$(whoami)@$(hostname):$(pwd)]\$ '
-
-alias rm='rm -I'
