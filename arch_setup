@@ -203,7 +203,12 @@ systemctl iwd.service && systemctl enable iwd.service
 #This tripped me up the first time: in addition to connecting to a wifi endpoint
 #you need to also get an ip through dhcp. To set this up wit iwd, you need to do
 #See https://wiki.archlinux.org/index.php/Iwd#Installation#Enable_built-in_network_configuration
-printf "[General]\nEnableNetworkConfiguration=true" >> /etc/iwd/main.conf
+#You also need to set up DNS, add 
+printf "[General]\nEnableNetworkConfiguration=true\n" >> /etc/iwd/main.conf
+#Also need to set up DNS manager. Add this to iw configuration.
+printf "[Network]\nNameREsolvingService=systemd" >> /etc/iwd/main.conf
+# Start systemd-resolved
+systemctl start systemd-resolved && systemctl enable systemd-resolved
 
 # Create a new wifi profile using iwctl
 iwctl
