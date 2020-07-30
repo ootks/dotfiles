@@ -7,7 +7,7 @@
 
 alias ls='ls --color=auto'
 alias l=ls
-export PS1='[$(whoami)@$(hostname):$(pwd)]\$ '
+export PS1='[\u@\h:\w]\$ '
 
 # Created by `userpath` on 2020-07-19 16:31:40
 export PATH="$PATH:/home/kshu/.local/bin"

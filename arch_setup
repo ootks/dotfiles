@@ -244,3 +244,6 @@ config config status.showUntrackedFiles no
 # Install texlive-latexextra for latex (this doesn't include a lot of tex features, but 
 # includes most latex features).
 pacman -S texlive-latex-extra
+
+# Install gvim over vim for clipboard support
+pacman -S gvim
