@@ -253,7 +253,7 @@ pacman -S bluez
 pacman -S bluez-utils
 
 # Add a second monitor with VGA on the right side.
-# xrandr --output HDMI-0 --auto --output DVI-D-0 --auto --right-of HDMI-0
+# xrandr --output HDMI-0 --auto --output DVI-D-0 --auto --right-of HDMI-0 --rotate left
 
 # Install pdf viewer.
 pacman -S evince
