@@ -99,7 +99,7 @@ set smartcase
 set hlsearch
 set incsearch
 
-colorscheme molokai
+colorscheme jellybeans
 syntax on
 filetype plugin indent on
 set whichwrap+=<,>,h,l,[,]
