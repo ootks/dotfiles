@@ -1,6 +1,7 @@
 [global_config]
   title_use_system_font = False
 [keybindings]
+  new_window = <Primary><Shift>n
 [profiles]
   [[default]]
     background_darkness = 1.0
