@@ -202,7 +202,7 @@ exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 
-bindsym $mod+Shift+l exec xautolock -locknow
+bindsym $mod+Shift+l exec xautolock -locknow; exec systemctl suspend
 
 # Don't change focus with mouse
 focus_follows_mouse no
