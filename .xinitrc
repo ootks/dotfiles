@@ -4,4 +4,3 @@
 #    '#' are comments
 setxkbmap -option caps:escape
 exec i3
-exec /home/kshu/.screenlayout/monitors.sh

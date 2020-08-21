@@ -77,6 +77,7 @@ filetype indent on
 let g:tex_flavor='latex'
 let g:Tex_DefaultTargetFormat = 'pdf'
 let g:Tex_MultipleCompileFormats='pdf, aux'
+let g:vimtex_view_general_viewer = 'evince'
 
 "Make the leader key ' '
 let mapleader = " "

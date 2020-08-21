@@ -70,6 +70,14 @@ useradd -m -g users -G wheel,storage,power -s /bin/bash kshu
 pacman -S alsa-utils
 # Install pulseaudio (needed for audio)
 pacman -S pulseaudio
+# Add self to the audio group
+gpasswd -a kshu audio
+# copy the audio config to user directory
+mkdir -p .config/pulse/ 
+cp /etc/pulse/default.pa .config/pulse
+# comment out the following line in default.pa:
+# load-module module-suspend-on-idle
+# This will prevent the audio from dying when resuming from suspend
 
 # Copied .vimrc from dropbox
 # Install git
@@ -92,9 +100,9 @@ pacman -S feh
 # Install picom to set transparency
 pacman -S picom
 # Add line to i3 config to turn on compositing using picom
-printf "opacity-rule = [\n\"80:class_g = 'Terminator' && !focused\",\n]; " >> .config/picom/picom.conf
+printf "opacity-rule = [\n\"80:class_g = 'Terminator' && !focused\",\n]; \n" >> .config/picom/picom.conf
 # Add lines to picom config to turn on compositing for terminator windows
-echo "exec --no-startup-id picom" >> .config/i3/config
+printf "exec --no-startup-id picom \n" >> .config/i3/config
 
 # Install file manager
 pacman -S thunar
@@ -116,7 +124,7 @@ pacman -S i3lock-color
 # autolock turns the screen off after a minute
 # Sets it to suspend the computer 5 minutes after locking
 # Putting the mouse in the corner turns off this behaviour
-echo "exec_always --no-startup-id xautolock -time 15 -locker i3lock -notify 50 -notifier \"notify-send -u critical -t 10000 -- 'LOCKING screen in 1 minut'\" -killtime 5 -killer \"systemctl suspend\" -corners ---- -secure &" >> .config/i3/config
+printf "exec_always --no-startup-id xautolock -time 15 -locker i3lock -notify 50 -notifier \"notify-send -u critical -t 10000 -- 'LOCKING screen in 1 minut'\" -killtime 5 -killer \"systemctl suspend\" -corners ---- -secure &\n" >> .config/i3/config
 
 
 # Need unicode fonts, install gnu free fonts
@@ -162,7 +170,7 @@ popd
 popd
 
 # Set polybar configuration directory to ~/.config
-echo "export XDG_CONFIG_HOME=$HOME/.config" >> ~/.bash_profile
+printf "export XDG_CONFIG_HOME=$HOME/.config\n" >> ~/.bash_profile
 
 # Install the siji font, to show polybar icons
 pushd aur_packages
@@ -175,7 +183,7 @@ popd
 # Add a line to make polybar the relevant bar
 # Need to add a script for launching polybar, ala 
 # https://wiki.archlinux.org/index.php/Polybar
-echo "exec_always --no-startup-id $HOME/.config/polybar/launch.sh" >> .config/i3/config
+printf "exec_always --no-startup-id $HOME/.config/polybar/launch.sh\n" >> .config/i3/config
 # To remove the i3bar from i3, remove the bar section friom i3
 
 # Install spotify from AUR
@@ -206,7 +214,7 @@ systemctl iwd.service && systemctl enable iwd.service
 #You also need to set up DNS, add 
 printf "[General]\nEnableNetworkConfiguration=true\n" >> /etc/iwd/main.conf
 #Also need to set up DNS manager. Add this to iw configuration.
-printf "[Network]\nNameREsolvingService=systemd" >> /etc/iwd/main.conf
+printf "[Network]\nNameREsolvingService=systemd\n" >> /etc/iwd/main.conf
 # Start systemd-resolved
 systemctl start systemd-resolved && systemctl enable systemd-resolved
 
@@ -259,3 +267,24 @@ pacman -S bluez-utils
 pacman -S evince
 # Remap caps lock to esc
 setxkbmap -option caps:escape
+
+# Use udisks2 to mount disks. 
+# Use udiskctl mount -b /dev/SDXYi to mount
+# Use udiskctl unmount -b /dev/SDXYi to unmount
+pacman -S udisks2
+
+#####################################################
+################SSH Settings#########################
+#####################################################
+# Add settings to ssh config
+printf "AllowUsers kshu\n" >> /etc/ssh/sshd_config
+printf "Port %d\n" $(shuf -i 2000-65000 -n 1) >> /etc/ssh/sshd_config
+printf "PasswordAuthentication no\n" >> /etc/ssh/sshd_config
+print "PermitRootLogin forced-commands-only\n"  >> /etc/ssh/sshd_config
+systemctl restart sshd.service
+
+
+# Need to set the right flags to make X close when you hit ctrlalt-backspace
+# An error made the following thing happen: the screen would be offset relative to the position of the mouse; the mouse would move around on the full screen, but the windows only took up the bottom half of the screen. However, the window manager seemed to think that the windows were in the right place; to click on a link, you would need to move the mouse to where the link would be if the image was drawn correctly. Running
+# xrandr -s 0
+# resets the screensize and fixes everything.
