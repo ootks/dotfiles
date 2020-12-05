@@ -202,9 +202,9 @@ set backspace=2 " make backspace work like most other apps
 
 set directory=$HOME/.vim/swapfiles
 
-"Following two lines makes vimtex hide/format math lines.
-set conceallevel=1
-let g:tex_conceal='abdmg'
+" "Following two lines makes vimtex hide/format math lines.
+" set conceallevel=1
+" let g:tex_conceal='abdmg'
 
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'

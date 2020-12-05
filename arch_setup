@@ -288,3 +288,38 @@ systemctl restart sshd.service
 # An error made the following thing happen: the screen would be offset relative to the position of the mouse; the mouse would move around on the full screen, but the windows only took up the bottom half of the screen. However, the window manager seemed to think that the windows were in the right place; to click on a link, you would need to move the mouse to where the link would be if the image was drawn correctly. Running
 # xrandr -s 0
 # resets the screensize and fixes everything.
+
+# Added redshift
+pacman -S redshift
+# Need to copy service file to user system files:
+cp /usr/lib/systemd/user/redshift.service ~/.config/systemd/user/
+# This adds a new systemd service. You need to add in Environment=DISPLAY=:0
+# under service to make this work for some reason. Start with
+systemd --user start redshift
+
+# The default gpg keyserver was down, so I added the line
+printf "keyserver hkps://keyserver.ubuntu.com\n" >> ~/.gnupg/gpg.conf
+
+# Ran "sudo sensors-detect" to detect temperature sensors
+# Baseline temperatures:
+# $sensors
+# iwlwifi_1-virtual-0
+# Adapter: Virtual device
+# temp1:        +26.0°C
+# 
+# acpitz-acpi-0
+# Adapter: ACPI interface
+# temp1:        +27.8°C  (crit = +119.0°C)
+# 
+# pch_cannonlake-virtual-0
+# Adapter: Virtual device
+# temp1:        +30.0°C
+
+
+# Enable multilib to install wine by uncommenting a line in /etc/pacman.conf
+#  [multilib]
+#  Include = /etc/pacman.d/mirrorlist
+pacman -S wine
+
+# I needed to jump through a lot of hoops to get ssh acccess to the remarkable.
+# The details are in projects/remarkable

@@ -1,5 +1,6 @@
 [global_config]
   title_use_system_font = False
+  title_font = Sans 20
 [keybindings]
   new_window = <Primary><Shift>n
 [profiles]

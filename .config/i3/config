@@ -179,13 +179,13 @@ bindsym $mod+Shift+s exec spotify
 bindsym $mod+Shift+n exec nixnote2
 
 # Start the autolock to automatically lock the screen after a few minutes
-exec_always --no-startup-id xautolock -time 15 -locker "~/.config/locker/screen_locker.sh" -notify 50 -notifier "notify-send -u critical -t 10000 -- 'LOCKING screen in 1 minute'" -killtime 5 -killer "systemctl suspend" -corners --+- -cornerdelay 2 -cornerredelay 30 &
+exec_always --no-startup-id xautolock -time 15 -locker "~/.config/locker/screen_locker.sh" -notify 50 -notifier "notify-send -u critical -t 10000 -- 'LOCKING screen in 1 minute'" -killtime 5 -killer "systemctl suspend" -corners --+- -cornerdelay 60 -cornerredelay 30 &
 
 # Run dunst to deliver notifications
 exec dunst
 
 #Set wallpaper
-exec --no-startup-id feh --bg-scale /home/kshu/wallpapers/stars.jpg
+exec_always --no-startup-id feh --bg-scale /home/kshu/wallpapers/scorched_earth.png
 
 # Start compositor
 exec --no-startup-id picom
