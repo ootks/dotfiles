@@ -228,3 +228,6 @@ let g:vimtex_compiler_latexmk = {
     \   '-interaction=nonstopmode',
     \ ],
     \}
+
+" Make : a word boundary
+set iskeyword-=:

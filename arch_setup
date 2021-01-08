@@ -64,7 +64,6 @@ useradd -m -g users -G wheel,storage,power -s /bin/bash kshu
 ####################
 ####Audio set up ###
 ####################
-# Install nvidia drivers
 # Check with lspci -k that the drivers installed
 # Install alsa (needed for audio)
 pacman -S alsa-utils
@@ -323,3 +322,11 @@ pacman -S wine
 
 # I needed to jump through a lot of hoops to get ssh acccess to the remarkable.
 # The details are in projects/remarkable
+
+# Something went wrong with X after some update. Going to just remove all nvidia stuff.
+pacman -R nvidia
+pacman -R lib32-nvidia-utils
+pacman -R nvidia-utils
+# Install nouveau
+pacman -S mesa
+# Need to update grub config to remove nomodeset

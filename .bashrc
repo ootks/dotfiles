@@ -18,10 +18,16 @@ export PATH="$HOME/.elan/bin:$PATH"
 
 export CONFIG="$HOME/.config"
 
+# Add/read the set up documentation
 alias addset="vim /home/kshu/arch_setup; config add /home/kshu/arch_setup"
+
+# Read the diary
+alias readdiary="vim /home/kshu/projects/diary/received_texts"
 
 # From https://news.ycombinator.com/item?id=11070797
 alias config='/usr/bin/git --git-dir=$HOME/.myconf/ --work-tree=$HOME'
 
-alias rm='rm -I'
+
+alias rm='rm -i'
 alias cp='cp -i'
+
